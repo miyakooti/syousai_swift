@@ -32,3 +32,34 @@ print(closure2(), globalCount)
 print(closure2(), globalCount)
 
 //closureが処理に使ってる値、localvar, bがキャプチャされている。
+
+
+
+
+class MyInt {
+    var value = 0
+    init(_ v: Int) {
+        print("生成されました")
+        self.value = v
+    }
+    deinit {
+        print("解放されました")
+    }
+}
+
+func makerZ(_ a: MyInt) -> () -> () {
+    let localvar = a
+    return { () -> () in
+        localvar.value += 1
+        print(localvar.value)
+    }
+}
+
+var myInt: MyInt! = MyInt(10)
+var closure3:(() -> ())! = makerZ(myInt)
+closure3()
+closure3()
+closure3() // myIntインスタンスをキャプチャしているんだね。
+
+myInt = nil // まだ開放されない
+closure3 = nil // ここで解放
